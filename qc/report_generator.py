@@ -6,7 +6,7 @@
 # Data Qaulity Reporter (html format)
 #
 
-from  data_quality_reporter import ReportInfo
+from data_quality_reporter import ReportInfo
 from format_config import DATA_SOURCE_TYPE
 
 if __name__ == "__main__":

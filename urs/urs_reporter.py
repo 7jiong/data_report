@@ -53,7 +53,7 @@ class ReportGenerator:
         df = None
         for encoding in encodings:
             try:
-                df = read_func(io=path, skiprows=skip_rows, usecols=use_cols, encoding=encoding)
+                df = read_func(path, skiprows=skip_rows, usecols=use_cols, encoding=encoding)
             except Exception as e:
                 print(e)
                 continue
