@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <meta name="Generator" content="Version alpha">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Data Quality Report</title>
+    <link type="text/css" href="./css/main.css" rel="stylesheet">
+    <script language="javascript" type="text/javascript">
+        <!--
+        function startup() {
+
+        }
+        function shutdown() {
+
+        }
+
+        //-->
+    </script>
+
+</head>
+<body onload="startup()" onunload="shutdown()" class="Body">
+
+<script language="javascript" type="text/javascript">
+    <!--
+    var _info = navigator.userAgent
+    var _ie = (_info.indexOf("MSIE") > 0
+    && _info.indexOf("Win") > 0
+    && _info.indexOf("Windows 3.1") < 0);
+
+    //-->
+</script>
+
+<div class="branch">
+    <a name="IDX"></a>
+    <table class="SysTitleAndFooterContainer" width="100%" cellspacing="1" cellpadding="1" rules="none" frame="void"
+           border="0" summary="Page Layout">
+        <tr>
+            <td class="c SystemTitle"> &nbsp;</td>
+        </tr>
+        <tr>
+            <td class="c SystemTitle2">质量控制报告</td>
+        </tr>
+        <tr>
+            <br>
+            <td class="c SystemTitle3">{{data_quality_checker.df_info.df_name}} 文件</td>
+        </tr>
+        <tr>
+            <td class="c SystemTitle4">报告生成时间：{{data_quality_checker.process_time}}</td>
+        </tr>
+        <tr>
+            <td class="c ProcTitle">CONTENTS PROCEDURE</td>
+        </tr>
+    </table>
+    <br>
+    <div align="center">
+        <table class="Table" cellspacing="1" cellpadding="7" rules="groups" frame="box" border="1" bordercolor="#000000"
+               summary="Procedure Contents: 属性">
+            <colgroup>
+                <col>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th class="l RowHeader" scope="row">数据集名</th>
+                <td class="l Data">{{data_quality_checker.df_info.df_name}}</td>
+                <th class="l RowHeader" scope="row">观测数</th>
+                <td class="l Data">{{data_quality_checker.df_info.records_num}}</td>
+            </tr>
+            <tr>
+                <th class="l RowHeader" scope="row">创建时间</th>
+                <td class="l Data">{{data_quality_checker.process_time}}</td>
+                <th class="l RowHeader" scope="row">变量数</th>
+                <td class="l Data">{{data_quality_checker.df_info.cols_num}}</td>
+            </tr>
+            <tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+<div class="branch">
+    <p style="page-break-after: always;"><br></p>
+    <hr size="3">
+    <a name="IDX2"></a>
+    <div>
+        <div align="center">
+            <table class="Table" cellspacing="1" cellpadding="7" rules="groups" frame="box" border="1"
+                   bordercolor="#000000" summary="Procedure Print: 数据集 WORK.CUR_RANK_STAY_TIME">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th class="c b Header" colspan="7" scope="colgroup">按字母排序的变量和属性列表</th>
+                </tr>
+                <tr>
+                    <th class="r b Header" scope="col">#</th>
+                    <th class="l b Header" scope="col">变量</th>
+                    <th class="l b Header" scope="col">类型</th>
+                    <th class="r b Header" scope="col">长度</th>
+                    <th class="l b Header" scope="col">标签</th>
+                </tr>
+                </thead>
+                <tbody>
+                % for col_name, col in data_quality_checker.df_info.cols.items():
+                <tr>
+                    <th class="r RowHeader" scope="row">
+                        {{data_quality_checker.df_info.orig_df_col_to_idx.get(col.col_name)}}
+                    </th>
+                    <td class="l Data">{{col.col_name}}</td>
+                    <td class="l Data">{{col.type}}</td>
+                    <td class="r Data">{{col.type_length}}</td>
+                    <td class="l Data"></td>
+                </tr>
+                %end
+                </tbody>
+            </table>
+
+            <div class="branch">
+                <p style="page-break-after: always;"><br></p>
+                <hr size="3">
+                <a name="IDX3"></a>
+                <table class="SysTitleAndFooterContainer" width="100%" cellspacing="1" cellpadding="1" rules="none"
+                       frame="void" border="0" summary="Page Layout">
+                    <tr>
+                        <td class="c SystemTitle"> &nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="c SystemTitle2">{{data_quality_checker.df_info.df_name}} 文件所有变量频数统计报告</td>
+                    </tr>
+                    <tr>
+                        <td class="c SystemTitle3">报告生成时间: {{data_quality_checker.process_time}}</td>
+                    </tr>
+                    <tr>
+                        <td class="c SystemTitle4">总数据记录数: {{data_quality_checker.df_info.records_num}}</td>
+                    </tr>
+                </table>
+                <br>
+                %for col_name, col in data_quality_checker.df_info.cols.items():
+                % if col.df_desc:
+                <div align="center">
+                    <p style="page-break-after: always;"><br></p>
+                    <hr size="3">
+                    <table class="Table" cellspacing="1" cellpadding="5" rules="groups" frame="box" border="1"
+                           bordercolor="#000000" summary="Procedure Contents: 属性">
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="r b Header" scope="col">{{col_name}}</th>
+                            <th class="r b Header" scope="col">频数统计</th>
+                            <th class="r b Header" scope="col">总频数百分比</th>
+                            <th class="r b Header" scope="col">累积频数统计</th>
+                            <th class="r b Header" scope="col">累积百分比</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        % for statis_name, statis_item in col.df_desc:
+                        <tr>
+                            <td class="r Data">{{statis_name}}</td>
+                            <td class="r Data">{{int(statis_item.get('freq'))}}</td>
+                            <td class="r Data">{{float('%.4f' %statis_item.get('freq_percentage'))}}</td>
+                            <td class="r Data">{{int(statis_item.get('cum_freq'))}}</td>
+                            <td class="r Data">{{float('%.4f' %statis_item.get('cum_freq_percentage'))}}</td>
+                        </tr>
+                        %end
+                        %end
+                        </tbody>
+                    </table>
+                </div>
+                %end
+
+                <div class="branch">
+                    <p style="page-break-after: always;"><br></p>
+                    <hr size="3">
+                    <a name="IDX3"></a>
+                    <table class="SysTitleAndFooterContainer" width="100%" cellspacing="1" cellpadding="1" rules="none"
+                           frame="void" border="0" summary="Page Layout">
+                        <tr>
+                            <td class="c SystemTitle"> &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="c SystemTitle2">{{data_quality_checker.df_info.df_name}} 文件字符变量综合统计报告</td>
+                        </tr>
+                        <tr>
+                            <td class="c SystemTitle3">报告生成时间: {{data_quality_checker.process_time}}</td>
+                        </tr>
+                        <tr>
+                            <td class="c SystemTitle4">总数据记录数: {{data_quality_checker.df_info.records_num}}</td>
+                        </tr>
+                    </table>
+                    <br>
+                </div>
+
+                <div align="center">
+                    <p style="page-break-after: always;"><br></p>
+                    <hr size="3">
+                    <table class="Table" cellspacing="1" cellpadding="5" rules="groups" frame="box" border="1"
+                           bordercolor="#000000" summary="Procedure Contents: 属性">
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="r b Header" scope="col">Variable</th>
+                            <th class="r b Header" scope="col"># MISSING</th>
+                            <th class="r b Header" scope="col"># NONMISSING</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        % for desc_name, desc_item in data_quality_checker.df_info.str_cols_desc:
+                        <tr>
+                            <td class="r Data">{{desc_name}}</td>
+                            <td class="r Data">{{int(desc_item.get('# MISSING'))}}</td>
+                            <td class="r Data">{{int(desc_item.get('# NONMISSING'))}}</td>
+                        </tr>
+                        %end
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="branch">
+                    <p style="page-break-after: always;"><br></p>
+                    <hr size="3">
+                    <a name="IDX4"></a>
+                    <table class="SysTitleAndFooterContainer" width="100%" cellspacing="1" cellpadding="1" rules="none"
+                           frame="void" border="0" summary="Page Layout">
+                        <tr>
+                            <td class="c SystemTitle"> &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="c SystemTitle2">{{data_quality_checker.df_info.df_name}} 文件数值变量综合统计报告</td>
+                        </tr>
+                        <tr>
+                            <td class="c SystemTitle3">报告生成时间: {{data_quality_checker.process_time}}</td>
+                        </tr>
+                        <tr>
+                            <td class="c SystemTitle4">总数据记录数: {{data_quality_checker.df_info.records_num}}</td>
+                        </tr>
+                    </table>
+                    <br>
+                </div>
+
+
+                <div align="center">
+                    <p style="page-break-after: always;"><br></p>
+                    <hr size="3">
+                    <table class="Table" cellspacing="1" cellpadding="5" rules="groups" frame="box" border="1"
+                           bordercolor="#000000" summary="Procedure Contents: 属性">
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="r b Header" scope="col">Variable</th>
+                            <th class="r b Header" scope="col">MIN</th>
+                            <th class="r b Header" scope="col">MAX</th>
+                            <th class="r b Header" scope="col">MEAN</th>
+                            <th class="r b Header" scope="col">STD</th>
+                            <th class="r b Header" scope="col">10%</th>
+                            <th class="r b Header" scope="col">20%</th>
+                            <th class="r b Header" scope="col">25%</th>
+                            <th class="r b Header" scope="col">30%</th>
+                            <th class="r b Header" scope="col">40%</th>
+                            <th class="r b Header" scope="col">50%</th>
+                            <th class="r b Header" scope="col">60%</th>
+                            <th class="r b Header" scope="col">70%</th>
+                            <th class="r b Header" scope="col">75%</th>
+                            <th class="r b Header" scope="col">80%</th>
+                            <th class="r b Header" scope="col">90%</th>
+                            <th class="r b Header" scope="col">100%</th>
+                            <th class="r b Header" scope="col"># MISSING</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        % for desc_name, desc_item in data_quality_checker.df_info.numeric_cols_desc:
+                        <tr>
+                            <td class="r Data">{{desc_name}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('min'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('max'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('mean'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('std'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('10%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('20%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('25%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('30%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('40%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('50%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('60%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('70%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('75%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('80%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('90%'))}}</td>
+                            <td class="r Data">{{float('%.4f' %desc_item.get('100%'))}}</td>
+                            <td class="r Data">{{int(desc_item.get('# MISSING'))}}</td>
+                        </tr>
+                        %end
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="branch">
+                    <p style="page-break-after: always;"><br></p>
+                    <hr size="3">
+                    <a name="IDX4"></a>
+                    <table class="SysTitleAndFooterContainer" width="100%" cellspacing="1" cellpadding="1" rules="none"
+                           frame="void" border="0" summary="Page Layout">
+                        <tr>
+                            <td class="c SystemTitle"> &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="c SystemTitle2">以下为样本数据:</td>
+                        </tr>
+                    </table>
+                    <br>
+                </div>
+
+
+                <div align="center">
+                    <p style="page-break-after: always;"><br></p>
+                    <hr size="3">
+                    <table class="Table" cellspacing="1" cellpadding="5" rules="groups" frame="box" border="1"
+                           bordercolor="#000000" summary="Procedure Contents: 属性">
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th class="r b Header" scope="col">Obs</th>
+                            % for col_name in data_quality_checker.df_info.cols.keys():
+                            <th class="r b Header" scope="col">{{col_name}}</th>
+                            %end
+                        </tr>
+                        </thead>
+                        <tbody>
+                        % for row_idx, row in data_quality_checker.df_info.head_rows:
+                        <tr>
+                            <td class="r Data">{{row_idx}}</td>
+                            % for col_name in data_quality_checker.df_info.cols.keys():
+                            <td class="r Data">{{row.get(col_name)}}</td>
+                            %end
+                        </tr>
+                        %end
+                        </tbody>
+                    </table>
+                </div>
+
+
+</body>
+</html>
