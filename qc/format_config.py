@@ -14,7 +14,10 @@ def enum(**enums):
 ###################### 默认配置（一般情况不用修改） ######################
 
 # 数据集支持的格式(CSV和PICKLE)
-DATA_SOURCE_TYPE = enum(CSV=1, PICKLE=2)
+DATA_SOURCE_TYPE = enum(CSV=1, PICKLE=2, EXCEL=3)
+
+# 解析csv或者excel时备选的编码方式
+DS_ENCODINGS = ('utf-8', 'gbk')
 
 # 数据集的变量类型（NUMERIC, STR, TIME）
 COLS_TYPE = enum(NUMERIC=1, STR=2, TIME=3)
@@ -43,7 +46,7 @@ HEAD_NUM_DISCRETE_VAR = 20
 PATH_TO_DATA = "/Users/hzzlj/Desktop/Projects/dm/安华农/安华农数据步骤整理/step_15_合并违章数据_2014_2016.pkl"
 
 # 默认的数据格式PICKLE, 可以根据需要更改为数据集支持的格式
-DATA_SOURCE = DATA_SOURCE_TYPE.PICKLE
+DATA_SOURCE_DEFAULT_TYPE = DATA_SOURCE_TYPE.PICKLE
 
 # 需要强制转换为STR的列的列表, 例如["Credit-No", "Dealer", "DefectCode"]
 COLS_FORCED_TO_STR = []
@@ -56,6 +59,8 @@ LIMIT_DISCRETE_COLS = ['被保人姓名', '车主姓名', '车型代码', '车�
 
 # DATA SOURCE来自于CSV文件时需要的配置
 # 需要跳过的head行配置（可能文件头部有一些说明列不需要LOAD到DataFrame当中
-SKIP_ROWS = [0, 2, 3, 4]
+# 示例： SKIP_ROWS = [0, 2, 3, 4]
+SKIP_ROWS = []
 # 需要LOAD的列编号
-USE_COLS = range(1, 63)
+# 示例：USE_COLS = range(1, 63)
+USE_COLS = None

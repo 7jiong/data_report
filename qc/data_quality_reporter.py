@@ -10,7 +10,7 @@ from bottle import template
 
 from format_config import (COLS_TYPE, COLS_TYPE_SHOW_DESC, PATH_TO_DATA, COLS_FORCED_TO_STR, FILL_NAN_WITH_BLANK,
                            HEAD_LINE_NUM, SKIP_ROWS, USE_COLS, HEAD_NUM_CONTINUS_VAR, LIMIT_DISCRETE_COLS,
-                           DATA_SOURCE_TYPE, HEAD_NUM_DISCRETE_VAR, REPORT_PREFIX)
+                           HEAD_NUM_DISCRETE_VAR, REPORT_PREFIX, DATA_SOURCE_TYPE, DS_ENCODINGS)
 
 
 # TODO（lujia）: add navigation sidebar for quick scan
@@ -52,6 +52,7 @@ class DataFrameInfo(object):
         """
         cols = collections.OrderedDict()
         for col_name in df.columns.tolist():
+            print(col_name)
             cols[col_name] = DataFrameColsInfo(col_name, df, COLS_TYPE_SHOW_DESC)
         return cols
 
@@ -122,14 +123,24 @@ class DataFrameInfo(object):
         return df
 
     @classmethod
-    def create_df_info_from_csv(cls, path=PATH_TO_DATA,
-                                cols_forced_to_str=COLS_FORCED_TO_STR,
-                                fill_nan_with_blank=FILL_NAN_WITH_BLANK,
-                                head_line_num=HEAD_LINE_NUM,
-                                skip_rows=SKIP_ROWS,
-                                use_cols=USE_COLS):
+    def create_df_info_from_ascill(cls, read_func, path=PATH_TO_DATA,
+                                   cols_forced_to_str=COLS_FORCED_TO_STR,
+                                   fill_nan_with_blank=FILL_NAN_WITH_BLANK,
+                                   head_line_num=HEAD_LINE_NUM,
+                                   skip_rows=SKIP_ROWS,
+                                   use_cols=USE_COLS):
         """create DataFrame from csv file"""
-        orig_df = pd.read_csv(path, low_memory=False, skiprows=skip_rows, usecols=use_cols)
+        orig_df = None
+        for encoding in DS_ENCODINGS:
+            try:
+                orig_df = read_func(path, skiprows=skip_rows, usecols=use_cols, encoding=encoding)
+            except Exception as e:
+                print(e)
+                continue
+            else:
+                break
+        if orig_df is None:
+            raise QCException('Error! coding type not included in ENCONDINGS_PENDING!')
         return cls.create_df_comm_op(orig_df=orig_df, path=path, cols_forced_to_str=cols_forced_to_str,
                                      fill_nan_with_blank=fill_nan_with_blank, head_line_num=head_line_num)
 
@@ -264,14 +275,16 @@ class ReportInfo(object):
         if data_source_type == DATA_SOURCE_TYPE.PICKLE:
             df_info = DataFrameInfo.create_df_info_from_pickle()
         elif data_source_type == DATA_SOURCE_TYPE.CSV:
-            df_info = DataFrameInfo.create_df_info_from_csv()
+            df_info = DataFrameInfo.create_df_info_from_ascill(read_func=pd.read_csv)
+        elif data_source_type == DATA_SOURCE_TYPE.EXCEL:
+            df_info = DataFrameInfo.create_df_info_from_ascill(read_func=pd.read_excel)
         else:
             raise QCException(f'{data_source_type} does not support currently!')
         return cls(df_info=df_info)
 
     def to_html(self):
         html = template("./report_template.html", data_quality_checker=self)
-        fname = "%s_%s.html" % (REPORT_PREFIX, self.df_info.df_name)
+        fname = "%s_%s_%s.html" % (REPORT_PREFIX, self.df_info.df_name, self.process_time)
         fpath = os.path.join('dataQualityReports', fname)
         with open(fpath, 'wb') as f:
             f.write(html.encode('utf-8'))
