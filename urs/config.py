@@ -33,11 +33,11 @@ DS_FOLDER = './data_sources'
 DS_ENCODINGS = ('utf-8', 'gbk')
 
 ###################### 通用配置（需要根据数据集以及输出的变量进行修改） ######################
-DS_FILE_NAME = './全变量(2014-2017数据集)_2018_06_11_18_20.xlsx'
+DS_FILE_NAME = './全变量(2014-2017数据集)_2018_06_11_15_20.csv'
 
 DS_FILE_PATH = path.join(DS_FOLDER, DS_FILE_NAME)
 
-DS_TYPE = DSType.EXCEL
+DS_TYPE = DSType.CSV
 
 # urs报告中的目标变量
 TARGET_VARS = ['车牌号', '标准保费', '已报赔款', 'loss_cap_500k', 'cap车均赔款', 'uncap车均赔款',
@@ -66,6 +66,9 @@ NUMERIC_VAR_QUANTILE = 10
 
 # 枚举变量最多显示的列数（默认排序按照变量字母顺序升序排列）
 ENUM_VAR_MAX_LINES = 20
+
+# 枚举变量按照升序排列的列
+ENUM_VARS_ASCENDING_STANDARD = 'capped_lr_rel'
 
 # 自变量的分类展示
 VARS_GROUPS = {'从车因素': ['veh_age', '车辆类别'],
