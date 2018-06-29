@@ -7,7 +7,8 @@ import pandas as pd
 from config import (DS_FILE_PATH, NUMERIC_VARS_AS_ENUM, TARGET_VARS, TARGET_VARS_CALC_CONFIG,
                     VARS_GROUPS,
                     SKIP_ROWS, USE_COLS, NUMERIC_VAR_QUANTILE, ENUM_VAR_MAX_LINES, REPORT_PREFIX,
-                    REPORT_FOLDER, DS_ENCODINGS, TARGET_VARS_IN_CHART, DSType, TargetVarsCalcWay, DS_TYPE)
+                    REPORT_FOLDER, DS_ENCODINGS, TARGET_VARS_IN_CHART, DSType, TargetVarsCalcWay, DS_TYPE,
+                    ENUM_VARS_ASCENDING_STANDARD)
 
 
 class ReportGenerator:
@@ -244,6 +245,8 @@ class URSDfCalculator:
             urs_df[var_rel_tmp] = urs_df[var_rel]
             urs_df[var_rel] = urs_df[var_rel_tmp] / (urs_df[var_rel_tmp].mean()) - 1
             urs_df.drop(var_rel_tmp, axis=1, inplace=True)
+
+        urs_df.sort_values(ENUM_VARS_ASCENDING_STANDARD, ascending=True, inplace=True)
         return urs_df
 
     def _test_col_in_df(self, var_name):
@@ -254,7 +257,7 @@ class URSDfCalculator:
         if set(self.target_vars) != set(self.target_vars_calc_config.keys()):
             raise URSException(f'TARGET_VARS does not match TARGET_VARS_CALC_CONFIG,'
                                f'details: {set(self.target_vars) ^ set(self.target_vars_calc_config.keys())}')
-        if not self.var_name in self.df.columns:
+        if self.var_name not in self.df.columns:
             raise URSException(f'{self.var_name} does not included in dataframe')
         if self.df[self.var_name].dtype == object or self.var_name in self.numeric_vars_as_enum:
             return self.generate_enum_urs_df()
